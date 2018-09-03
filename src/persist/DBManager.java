@@ -2,6 +2,7 @@ package persist;
 
 import entity.Events;
 import entity.Users;
+import generators.EventGenerator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -43,7 +44,26 @@ public class DBManager {
         }
     }
 
+    public static void newEvent(Events e){
+        em.getTransaction().begin();
+        em.persist(e);
+        em.getTransaction().commit();
+    }
+
+    public static void newUser(Users u){
+        em.getTransaction().begin();
+        em.persist(u);
+        em.getTransaction().commit();
+    }
+
+    public static boolean isStored(String userID){
+        em.getTransaction().begin();
+        boolean e = em.createQuery("from Users where userId = " + userID, Users.class).getResultList().isEmpty();
+        em.getTransaction().commit();
+        return e;
+    }
+
     public static void main(String[] args) {
-        System.out.println(getEvents());
+        System.out.println(EventGenerator.allEvents());
     }
 }

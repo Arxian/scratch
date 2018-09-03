@@ -11,6 +11,10 @@ public class Users {
     private String userId;
     private Byte mentor;
 
+    public Users(String userId) {
+        this.userId = userId;
+    }
+
     @Id
     @Column(name = "userID")
     public String getUserId() {

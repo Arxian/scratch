@@ -153,4 +153,11 @@ public class Events {
     public int hashCode() {
         return Objects.hash(eventId, eventName, eventPriority, eventDescription, startDate, endDate, eventComplete, subjectId, patternId, userId, typeId);
     }
+
+    public String json(){
+        if (this.endDate != null){
+            return String.format("{title: '%s', start: '%s', end: '%s', type: 'Event', description: '%s'}", this.eventName, this.startDate.toString(), this.endDate.toString(), this.eventDescription);
+        }
+        return String.format("{title: '%s', start: '%s', type: 'Event', description: '%s'}", this.eventName, this.startDate.toString(), this.eventDescription);
+    }
 }

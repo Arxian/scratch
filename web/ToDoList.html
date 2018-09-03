@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'/>
+    <link rel='stylesheet' href='ToDoList_style.css'/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+
+<header class='speaker-form-header'>
+    <div>
+        <input style = "width:75%" type="text" id="addTaskInput" placeholder="Title...">
+        <button onclick="newElement()" >+</i></button>
+        <form action="/action_page.php">
+            <input  style = "width:75%" type="text" id="searchInput" placeholder="Search.." >
+            <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+
+        <form action="/action_page.php">
+            <div class="w3-dropdown-hover">
+                <i class="fa fa-filter" style="font-size:20px;color:teal;"></i>
+                <p style="background-color: black; color: white"><em>Filter</em></p>
+                <p style="background-color: black; color: white"><em>by priority</em></p>
+                <select class="w3-select" name="option" style="color: teal">
+                    <option value="" disabled selected>Choose your option</option>
+                    <option value="0">All</option>
+                    <option value="1">High</option>
+                    <option value="2">Medium</option>
+                    <option value="3">Low</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+    </div>
+</header>
+
+<ulToDo id="myUL">
+    <li>Hit the gym</li>
+    <li class="checked">Pay bills</li>
+    <li>Meet George</li>
+    <li>Buy eggs</li>
+    <li>Read a book</li>
+    <li>Organize office</li>
+</ulToDo>
+
+<script>
+    /*Implementation of the search bar*/
+    $(document).ready(function(){
+        $("#searchInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myUL li").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    /* Create a "close" button and append it to each list item*/
+    var myNodelist = document.getElementsByTagName("LI");
+    var i;
+    for (i = 0; i < myNodelist.length; i++) {
+        var span = document.createElement("SPAN");
+        var txt = document.createTextNode("\u00D7");
+        span.className = "closeToDo";
+        span.appendChild(txt);
+        myNodelist[i].appendChild(span);
+    }
+
+    /*Click on a close button to hide the current list item*/
+    var close = document.getElementsByClassName("closeToDo");
+    var i;
+    for (i = 0; i < close.length; i++) {
+        close[i].onclick = function() {
+            var div = this.parentElement;
+            div.style.display = "none";
+        }
+    }
+
+    /*Add a "checked" symbol when clicking on a list item*/
+    var list = document.querySelector('ulToDo');
+    list.addEventListener('click', function(ev) {
+        if (ev.target.tagName === 'LI') {
+            ev.target.classList.toggle('checked');
+        }
+    }, false);
+
+    /*Create a new list item when clicking on the "Add" button*/
+    function newElement() {
+        var li = document.createElement("li");
+        var inputValue = document.getElementById("addTaskInput").value;
+        var t = document.createTextNode(inputValue);
+        li.appendChild(t);
+        if (inputValue === '') {
+            alert("You must write something!");
+        } else {
+            document.getElementById("myUL").appendChild(li);
+        }
+        document.getElementById("addTaskInput").value = "";
+
+        var span = document.createElement("SPAN");
+        var txt = document.createTextNode("\u00D7");
+        span.className = "closeToDo";
+        span.appendChild(txt);
+        li.appendChild(span);
+
+        for (i = 0; i < close.length; i++) {
+            close[i].onclick = function() {
+                var div = this.parentElement;
+                div.style.display = "none";
+            }
+        }
+    }
+</script>
+</body>
+</html>
