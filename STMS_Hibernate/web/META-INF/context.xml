@@ -1,0 +1,11 @@
+<Context>
+	<Resource name="jdbc/stms_db"
+			  auth="Container" 
+			  type="javax.sql.DataSource" 
+			  driverClassName="com.mysql.jdbc.Driver"
+			  url="jdbc:mysql://localhost:3306/stms_db"
+			  username="root"
+			  password=""
+			  />
+
+</Context>
