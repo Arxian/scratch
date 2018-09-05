@@ -52,7 +52,7 @@
 
 
             // testing data - no database
-            //int numNote = 3; // replace hard coded number with get method
+            int numNote = 3; // replace hard coded number with get method
             //Notification note = new Notification(1, "senderid", "prmkim003", 1, false);
 
             // gte today's date - automatically fills the date field for adding an event
@@ -94,28 +94,84 @@
             </div>
         </div>
 
-        <script type="text/javascript">
+        <script>
             function myFunction() {
+                addNotifications();
                 var x = document.getElementById("Demo");
                 if (x.className.indexOf("w3-show") == -1) {
                     x.className += " w3-show";
                 } else {
                     x.className = x.className.replace(" w3-show", "");
                 }
+
                 resolveNotifications();
             }
 
             <!-- Notifications Functions: all resolved when user clicks tab -->
             function resolveNotifications() {
                 // all notifications have been seen
-                <% numNote=0;%>
+                <% numNote=0;%>;
 
-                // TO DO: set all resolved to true
+                // TO DO: set all notifications resolved to true
             }
 
-            function addNotification() {
+            // formally accepts mentoring invitation
+            function acceptMentor(mentorID)
+            {
+                // TO DO: Add Team member to database
+            }
+
+            // formally accepts a team invitation
+            function acceptTeamMember(memberID)
+            {
+                // TO DO: Add Team member to database
+            }
+
+            function addNotifications() {
                 // one notification added
                 <% numNote += 1; %>
+                function addMembers() {
+                    // TO DO: get data from the database instead of using a list
+                    var notifications = [
+                        {senderID: 'hlldar006', type: 1, resolved: false},
+                        {senderID: 'mzvwin001', type: 2, resolved: true}
+                    ];
+
+                    // leave this code the same
+
+                    // under the div for the notifications bar, add all elements in the notifications database
+                    var notificationsDiv = document.getElementById("Demo");
+                    var newNote;
+
+                    for (var i = 0; i < notifications.length; i++) {
+                        newNote = document.createElement('a');
+                        newNote.class = "w3-bar-item w3-button";
+                        newNote.innerText = notifications.senderID + typeMessage(notifications.type);
+
+                        // add a "Accept" button to an invitation
+                        if(notifications.type = 1)  // invitation from mentor
+                        {
+                            var acceptButtonMentor = document.createElement("input");
+                            acceptButtonMentor.type="button";
+                            acceptButtonMentor.id = "btnAcceptMentor";
+                            acceptButtonMentor.onclick= acceptMentor(notifications.senderID);
+                            acceptButtonMentor.innerText="Accept";
+                            newNote.appendChild(acceptButtonMentor);
+                        }
+                        else if(notifications.type = 3) // invitation from team member
+                        {
+                            var acceptButtonTeam = document.createElement("input");
+                            acceptButtonTeam.type="button";
+                            acceptButtonTeam.id = "btnAcceptTeamMember";
+                            acceptButtonTeam.onclick= acceptTeamMember(notifications.senderID);
+                            acceptButtonTeam.innerText="Accept";
+                            newNote.appendChild(acceptButtonTeam);
+                        }
+                        notificationsDiv.appendChild(newNote);
+                    }
+                }
+
+
             }
         </script>
 
@@ -131,11 +187,12 @@
                 <li><a href="index.jsp" class="active"><i class="fa fa-calendar" style="font-size:24px"></i> Schedule</a>
                 </li>
                 <li><a href="ToDoPage.jsp"><i class="fa fa-tasks" style="font-size:24px"></i> To Do List</a></li>
-                <li><a href="MentorsPage.jsp"><i class="fa fa-mortar-board" style="font-size:24px"></i> Mentorship</a></li>
                 <li><a href="TeamPage.jsp"><i class="fa fa-group" style="font-size:24px"></i> My Teams</a></li>
                 <li><a href="SubjectsPage.jsp"><i class="fa fa-book" style="font-size:24px"></i> My Subjects</a></li>
                 <li style="float:right"><a class="active" href="#HelpPage.jsp"><i class="fa fa-question-circle"
                                                                                   style="font-size:24px"></i> Help</a></li>
+                <li><a id="mentorPageButton" href="MentorsPage.jsp"><i class="fa fa-mortar-board" style="font-size:24px"></i> Mentorship</a></li>
+
             </ul>
         </nav>
 
@@ -194,7 +251,7 @@
         <style type="text/css">
 
             body {
-                margin: 0px 10px;
+                margin: 0 10px;
                 padding: 0;
                 font-family: "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
                 font-size: 14px;
@@ -209,8 +266,23 @@
 
     </head>
 
+    <script type="javascript">
+        // setup the screen based on dynamic data
+        function setup()
+        {
+            // add notifications to the notificationa bar
+            addNotifications();
 
-<body>
+            // To Do: if the user is not a mentor, the My Mentees option should not be available on the toolbar
+            //if (<%=u.isMentor()%> = false)
+            if (true)
+            {
+                document.getElementById("mentorPageButton").style.visibility="hidden";
+            }
+
+        }
+    </script>
+<body onload="setup()">
 <h7>&nbsp;</h7>
 
 <%
@@ -221,7 +293,7 @@
 
 <!-- Add Buttons -->
 
-<div stype="border-radius: 25px;" class="btn-group-add" style="display: inline;">
+<div type="border-radius: 25px;" class="btn-group-add" style="display: inline;">
 
     <div>
         <button id="btnAddEvent" onclick="showEventForm(0)"><i class="material-icons">add</i> Add Event</button>
@@ -322,7 +394,7 @@
     </table>
     <!-- Add new comment -->
     <div>
-    <textarea type="input" id="txaNewComment" name="element_1"
+    <textarea id="txaComment" type="input" id="txaNewComment" name="element_1"
               class="element textarea medium" maxlength=250></textarea>
         <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
