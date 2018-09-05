@@ -12,12 +12,7 @@
     <meta charset='utf-8' />
 
     <!-- User Data -->
-    <%
-        String usr = request.getParameter("lis_person_sourcedid").toString();
-
-        //User u = (User)request.getAttribute("user");
-        // code replaced by data from login
-    %>
+    <%@include file="UserInfo.jsp"%>
 
     <title>Student Time Management System: Home</title>
     <!-- Logo -->
@@ -107,7 +102,7 @@
             <li><a href="ToDoPage.jsp"><i class="fa fa-tasks" style="font-size:24px"></i> To Do List</a></li>
             <li><a href="MentorsPage.jsp"><i class="fa fa-mortar-board" style="font-size:24px"></i> Mentorship</a></li>
             <li><a href="TeamPage.jsp"><i class="fa fa-group" style="font-size:24px"></i> My Teams</a></li>
-            <li><a href="#SubjectsPge.jsp"><i class="fa fa-book" style="font-size:24px"></i> My Subjects</a></li>
+            <li><a href="SubjectsPage.jsp"><i class="fa fa-book" style="font-size:24px"></i> My Subjects</a></li>
             <li style="float:right"><a class="active" href="#HelpPage.jsp"><i class="fa fa-question-circle" style="font-size:24px"></i> Help</a></li>
         </ul>
     </nav>
@@ -126,7 +121,7 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
-<link href='ToDoList.css' rel='stylesheet' />
+<!--<link href='ToDoList.css' rel='stylesheet' />-->
 <script src='ToDoListJS.js'></script>
 
 <script type="text/javascript">
@@ -272,7 +267,7 @@
                     <span onclick="newElement()" class="addBtn">Add</span>
                 </div>
 
-                <ul id="myUL">
+                <ul id="myUL" class="tdl">
                     <li>Hit the gym</li>
                     <li class="checked">Pay bills</li>
                     <li>Meet George</li>

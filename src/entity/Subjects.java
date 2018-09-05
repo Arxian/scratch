@@ -52,6 +52,13 @@ public class Subjects {
                 Objects.equals(colour, subjects.colour);
     }
 
+    public Subjects(String name, String colour, String usr){
+        this.name = name;
+        this.subjectId = name.hashCode();
+        this.userId = usr;
+        this.colour = colour;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(subjectId, name, colour);

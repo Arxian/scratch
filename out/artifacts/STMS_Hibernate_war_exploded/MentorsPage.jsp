@@ -23,12 +23,7 @@
 <link rel="stylesheet" href="stylesheet.css">
 <head>
     <!-- User Data -->
-    <%
-        String usr = request.getAttribute("lis_person_sourcedid").toString();
-        if (!DBManager.isStored(usr)){
-            DBManager.newUser(new Users(usr));
-        }
-    %>
+    <%@include file="UserInfo.jsp"%>
 
     <title>Student Time Management System: My Mentees</title>
     <!-- Logo -->

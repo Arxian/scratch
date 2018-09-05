@@ -3,6 +3,8 @@
 <%@ page import="generators.EventGenerator" %>
 <%@ page import="persist.DBManager" %>
 <%@ page import="entity.Users" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="entity.Events" %>
 <%--
   Created by IntelliJ IDEA.
   User: Kim
@@ -18,13 +20,23 @@
 <html>
     <head>
         <!-- User Data -->
+        <%@include file="UserInfo.jsp"%>
         <%
-            String usr = request.getParameter("lis_person_sourcedid").toString();
-            /*if (!DBManager.isStored(usr)){
-                DBManager.newUser(new Users(usr));
-            }*/
+            Map<String, String[]> map = request.getParameterMap();
+            if (map.containsKey("isEventAdd") && map.get("isEventAdd").equals("true")){
+                DBManager.newEvent(new Events(
+                        map.get("name")[0],
+                        map.get("priority")[0],
+                        map.get("type")[0],
+                        map.get("subject")[0],
+                        map.get("startDate")[0],
+                        map.get("startTime")[0],
+                        map.get("endDate")[0],
+                        map.get("endTime")[0],
+                        usr
+                ));
+            }
         %>
-
         <title>Student Time Management System: Schedule</title>
         <!-- Logo -->
         <img src="img/Capture.PNG" alt="Logo" width="15%" height="15%">
@@ -40,7 +52,7 @@
 
 
             // testing data - no database
-            int numNote = 3; // replace hard coded number with get method
+            //int numNote = 3; // replace hard coded number with get method
             //Notification note = new Notification(1, "senderid", "prmkim003", 1, false);
 
             // gte today's date - automatically fills the date field for adding an event
@@ -201,6 +213,12 @@
 <body>
 <h7>&nbsp;</h7>
 
+<%
+    for (String[] s: request.getParameterMap().values()){
+        %><%=s[0]+" | "%> <%
+    }
+%>
+
 <!-- Add Buttons -->
 
 <div stype="border-radius: 25px;" class="btn-group-add" style="display: inline;">
@@ -336,7 +354,7 @@
     <div class="event-input">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <form action="EventController" method="post">
+            <form action="index.jsp" method="POST" id="eventcreation">
 
                 <h5>&nbsp;</h5>
                 <h3 align="center" id="eventFormHeader">Add New Event</h3>
@@ -385,7 +403,7 @@
                         <tr class="form-table">
                             <th class="form-table"><label>Subject</label></th>
                             <th class="form-table">
-                                <select id="priority" class="prioritycmb" type="text" name="priority" value="">
+                                <select id="subject" class="prioritycmb" type="text" name="subject" value="">
                                     <option style="background-color:#b9b219">INF3012S</option>
                                     <option style="background-color: #4c8ec0">CSC3003S</option>
                                 </select>
@@ -435,7 +453,7 @@
                         <tr class="form-table">
                             <th class="form-table" style="float:top;"><label>Description </label></th>
                             <th class="form-table">
-                                <textarea type="input" id="element_1" name="element_1"
+                                <textarea type="input" id="description" name="description"
                                           class="element textarea medium" maxlength=250></textarea>
                             </th>
                         </tr>
@@ -464,7 +482,7 @@
 
                                         <p>Event repeats every</p>
 
-                                        <input id="every" type="number" min="1" max="12" value="1" SIZE="3"
+                                        <input id="every" type="number" name="every" min="1" max="12" value="1" SIZE="3"
                                                width="5px"/> <select
                                             id="defineEvery" class="prioritycmb" type="text"
                                             name="cmbDefineEvery" value="">
@@ -475,14 +493,14 @@
                                         <p>on days</p>
                                         <table class="details">
                                             <tr class="details">
-                                                <th class="details"><input type="checkbox" id="sun" name="chbMon"/></th>
+                                                <th class="details"><input type="checkbox" id="sun" name="chbSun"/></th>
                                                 <th class="details"><input type="checkbox" id="mon" name="chbMon"/></th>
-                                                <th class="details"><input type="checkbox" id="tue" name="chbMon"/></th>
-                                                <th class="details"><input type="checkbox" name="chbMon"/></th>
-                                                <th class="details"><input type="checkbox" id="thu" name="chbMon"/>
+                                                <th class="details"><input type="checkbox" id="tue" name="chbTue"/></th>
+                                                <th class="details"><input type="checkbox" id="wed" name="chbWed"/></th>
+                                                <th class="details"><input type="checkbox" id="thu" name="chbThu"/>
                                                 </th>
-                                                <th class="details"><input type="checkbox" id="fri" name="chbMon"/></th>
-                                                <th class="details"><input type="checkbox" id="satu" name="chbMon"/>
+                                                <th class="details"><input type="checkbox" id="fri" name="chbFri"/></th>
+                                                <th class="details"><input type="checkbox" id="satu" name="chbSat"/>
                                                 </th>
                                             </tr>
                                             <tr class="details">
@@ -563,27 +581,31 @@
                 <div>
                     <link rel="stylesheet"
                           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-                    <button class="submit"
+                    <!--<button class="submit"
                             style="border-top-right-radius: 25px;border-top-left-radius: 25px;border-bottom-right-radius: 25px;border-bottom-left-radius: 25px;background-color: #535353;border: 1px solid #3b3b3b;color: white;padding: 10px 24px; cursor: pointer; float: right;" onclick="saveNewEvent()">
                         <i class="fa fa-check-square"></i> Save
-                    </button>
+                    </button>-->
+                    <input type="hidden" name = "isAddEvent" value="true" />
+                    <input type="hidden" name = "user" value="<%=usr%>" />
+                    <input type = "submit" value = "Save" style="border-top-right-radius: 25px;border-top-left-radius: 25px;border-bottom-right-radius: 25px;border-bottom-left-radius: 25px;background-color: #535353;border: 1px solid #3b3b3b;color: white;padding: 10px 24px; cursor: pointer; float: right;">
                     <script type="text/javascript">
                         function saveNewEvent() {
                             // TO DO: get data for title, start, end from form
-                            var eventName = document.getElementById("txtEventName").value;
-                            var priority = document.getElementById("txtPriority").value;
-                            var type = document.getElementById("type").value;
-                            // TO DO: finish for the other elements
-                            // TO DO: add the event to the database
+                            //var eventName = document.getElementById("txtEventName").value;
+                            //var priority = document.getElementById("txtPriority").value;
+                            //var type = document.getElementById("type").value;
+                            //// TO DO: finish for the other elements
+                            //// TO DO: add the event to the database
 
                             // display the event on the calendar
-                            eventData = {
-                                title: title,
-                                start: start,
-                                end: end
-                            }
-                            $('#calendar').fullCalendar('renderEvent', eventData, true);
-                            $('#calendar').fullCalendar('unselect');
+                            //eventData = {
+                            //    title: title,
+                            //    start: start,
+                            //    end: end
+                            //$('#calendar').fullCalendar('renderEvent', eventData, true);
+                            //$('#calendar').fullCalendar('unselect');
+                            alert("This is a debug message");
+                            //document.getElementById("eventcreation").submit();
                         };
 
                     </script>

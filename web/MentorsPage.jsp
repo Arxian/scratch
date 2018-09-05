@@ -23,12 +23,7 @@
 <link rel="stylesheet" href="stylesheet.css">
 <head>
     <!-- User Data -->
-    <%
-        String usr = request.getParameter("lis_person_sourcedid").toString();
-        if (!DBManager.isStored(usr)){
-            DBManager.newUser(new Users(usr));
-        }
-    %>
+    <%@include file="UserInfo.jsp"%>
 
     <title>Student Time Management System: My Mentees</title>
     <!-- Logo -->
@@ -40,7 +35,7 @@
 
 
         // testing data - no database
-        int numNote = 3; // replace hard coded number with get method
+        //int numNote = 3; // replace hard coded number with get method
         //Notification note = new Notification(1, "senderid", "prmkim003", 1, false);
 
         // gte today's date - automatically fills the date field for adding an event

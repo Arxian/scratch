@@ -1,10 +1,13 @@
 package entity;
 
+import persist.DBManager;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -20,6 +23,9 @@ public class Events {
     private Integer patternId;
     private String userId;
     private Integer typeId;
+
+    public Events() {
+    }
 
     @Id
     @Column(name = "eventID")
@@ -159,5 +165,25 @@ public class Events {
             return String.format("{title: '%s', start: '%s', end: '%s', type: 'Event', description: '%s'}", this.eventName, this.startDate.toString(), this.endDate.toString(), this.eventDescription);
         }
         return String.format("{title: '%s', start: '%s', type: 'Event', description: '%s'}", this.eventName, this.startDate.toString(), this.eventDescription);
+    }
+
+    public Events(String name, String prio, String typ, String subj, String startD, String startT, String endD, String endT, String user){
+        this.eventName = name;
+        switch (prio){
+            case "Low":
+                this.eventPriority = 1;
+                break;
+            case "Medium":
+                this.eventPriority = 2;
+                break;
+            case "High":
+                this.eventPriority = 3;
+                break;
+        }
+        this.typeId = DBManager.getType(typ).getTypeId();
+        this.subjectId = DBManager.getSubject(subj, user).getSubjectId();
+        this.startDate = Timestamp.valueOf(startD+" "+startT);
+        this.endDate = Timestamp.valueOf(endD+" "+endT);
+        this.userId = user;
     }
 }

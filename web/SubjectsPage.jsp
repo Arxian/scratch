@@ -19,12 +19,7 @@
     <meta charset='utf-8' />
 
     <!-- User Data -->
-    <%
-        String usr = request.getAttribute("lis_person_sourcedid").toString();
-        if (!DBManager.isStored(usr)){
-            DBManager.newUser(new Users(usr));
-        }
-    %>
+    <%@ include file="UserInfo.jsp"%>
 
     <title>Student Time Management System: My Subjects</title>
     <!-- Logo -->
@@ -36,10 +31,18 @@
 
 
         // testing data - no database
-        int numNote = 3; // replace hard coded number with get method
+        //int numNote = 3; // replace hard coded number with get method
         //Notification note = new Notification(1, "senderid", "prmkim003", 1, false);
 
         // gte today's date - automatically fills the date field for adding an event
+        Map<String, String[]> map = request.getParameterMap();
+        if (map.containsKey("isAddSubject") && map.get("isAddSubject").equals("true")){
+            DBManager.newSubject(new Subjects(
+                map.get("name")[0],
+                map.get("colour")[0],
+                usr)
+            );
+        }
         String selectedDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
 
     %>
@@ -114,7 +117,7 @@
             <li><a href="ToDoPage.jsp"><i class="fa fa-tasks" style="font-size:24px"></i> To Do List</a></li>
             <li><a href="MentorsPage.jsp"><i class="fa fa-mortar-board" style="font-size:24px"></i> Mentorship</a></li>
             <li><a href="TeamPage.jsp"><i class="fa fa-group" style="font-size:24px"></i> My Teams</a></li>
-            <li><a href="SubjectsPge.jsp" class="active"><i class="fa fa-book" style="font-size:24px"></i> My Subjects</a></li>
+            <li><a href="SubjectsPage.jsp" class="active"><i class="fa fa-book" style="font-size:24px"></i> My Subjects</a></li>
             <li style="float:right"><a class="active" href="#HelpPage.jsp"><i class="fa fa-question-circle" style="font-size:24px"></i> Help</a></li>
         </ul>
     </nav>
@@ -126,7 +129,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
 
-
+    <!-- 
+     Name = Subject Name
+     Age = Priority
+     City = Colour
+     ID = too mainstream.-->
     <style>
         body {
             font-family:sans-serif;
@@ -186,16 +193,18 @@
     <table>
         <td class="name">
             <input type="hidden" id="id-field" />
-            <input type="text" id="name-field" placeholder="Subject" />
+            <input type="text" id="name-field" name="name" placeholder="Subject" />
         </td>
         <td class="age">
-            <input type="text" id="age-field" placeholder="Priority" />
+            <input type="number" id="age-field" name="priority" placeholder="Priority" />
         </td>
         <td class="city">
-            <input type="text" id="city-field" placeholder="Colour" />
+            <input type="text" id="city-field" name="colour" placeholder="Colour" />
         </td>
         <td class="add">
-            <button id="add-btn">Add</button>
+            <!--<button id="add-btn">Add</button>-->
+            <input type="hidden" name="isAddSubject" value="true">
+            <input type="submit" id="add-btn" value="Add">
             <button id="edit-btn">Edit</button>
         </td>
     </table>
