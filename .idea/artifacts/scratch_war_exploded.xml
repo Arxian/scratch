@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="scratch:war exploded">
+    <output-path>out/artifacts/scratch_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="scratch" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="JPA 2.0-JPA 2.0" />
+          <element id="library" level="project" name="Hibernate 5.3.2-5.3.2" />
+          <element id="file-copy" path="C:/Program Files (x86)/MySQL/Connector J 8.0/mysql-connector-java-8.0.12.jar" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="scratch/web/Web2" />
+      <element id="javaee-facet-resources" facet="scratch/web/Web" />
+    </root>
+  </artifact>
+</component>
