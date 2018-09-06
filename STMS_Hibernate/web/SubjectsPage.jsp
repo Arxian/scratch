@@ -20,7 +20,6 @@
 
     <!-- User Data -->
     <%@ include file="UserInfo.jsp"%>
-
     <title>Student Time Management System: My Subjects</title>
     <!-- Logo -->
     <img src="img/Capture.PNG" alt="Logo" width="15%" height="15%">
@@ -36,11 +35,24 @@
 
         // gte today's date - automatically fills the date field for adding an event
         Map<String, String[]> map = request.getParameterMap();
-        if (map.containsKey("isAddSubject") && map.get("isAddSubject").equals("true")){
+        for (String[] s : map.values()){
+            %><%=s[0]+" | "%><%
+        }
+        if (map.containsKey("isAddSubject") && map.get("isAddSubject")[0].equals("true")){
             DBManager.newSubject(new Subjects(
                 map.get("name")[0],
                 map.get("colour")[0],
-                usr)
+                usr,
+                Integer.parseInt(map.get("priority")[0]))
+            );
+            System.out.println("Adding subject");
+        }
+        else if (map.containsKey("isAddSubject") && map.get("isAddSubject")[0].equals("edit")){
+            DBManager.updateSubject(new Subjects(
+                    map.get("name")[0],
+                    map.get("colour")[0],
+                    usr,
+                    Integer.parseInt(map.get("priority")[0]))
             );
         }
         String selectedDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
@@ -156,11 +168,26 @@
         </tr>
         </thead>
         <tbody class="list">
+        <%
+            List<Subjects> subs = DBManager.getSubjects(usr);
+            for (int i = 0; i<subs.size(); i++){
+                %>
+                <tr>
+                    <td class="id" style="display:none;"><%=i%></td>
+                    <td class="name"><%=subs.get(i).getName()%></td>
+                    <td class="age"><%=subs.get(i).getPriority()%></td>
+                    <td  bgcolor="#<%=subs.get(i).getColour()%>" class="city"><%=subs.get(i).getColour()%></td>
+                    <td class="edit"><button class="edit-item-btn">Edit</button></td>
+                    <td class="remove"><button class="remove-item-btn">Remove</button></td>
+                </tr>
+                <%
+            }
+        %>
         <tr>
             <td class="id" style="display:none;">1</td>
             <td class="name">Mathematics</td>
             <td class="age">27</td>
-            <td  bgcolor="#FF0000" class="city"></td>
+            <td  bgcolor="#FF0000" class="city">FF0000</td>
             <td class="edit"><button class="edit-item-btn">Edit</button></td>
             <td class="remove"><button class="remove-item-btn">Remove</button></td>
         </tr>
@@ -168,7 +195,7 @@
             <td class="id" style="display:none;">2</td>
             <td class="name">Computer Science</td>
             <td class="age">-132</td>
-            <td bgcolor="green" class="city"></td>
+            <td bgcolor="green" class="city">green</td>
             <td class="edit"><button class="edit-item-btn">Edit</button></td>
             <td class="remove"><button class="remove-item-btn">Remove</button></td>
         </tr>
@@ -176,7 +203,7 @@
             <td class="id" style="display:none;">3</td>
             <td class="name">History</td>
             <td class="age">-23</td>
-            <td bgcolor="yellow" class="city"></td>
+            <td bgcolor="yellow" class="city">yellow</td>
             <td class="edit"><button class="edit-item-btn">Edit</button></td>
             <td class="remove"><button class="remove-item-btn">Remove</button></td>
         </tr>
@@ -184,30 +211,33 @@
             <td class="id" style="display:none;">4</td>
             <td class="name">Hockey</td>
             <td class="age">26</td>
-            <td bgcolor="pink"  class="city"></td>
+            <td bgcolor="pink"  class="city">pink</td>
             <td class="edit"><button class="edit-item-btn">Edit</button></td>
             <td class="remove"><button class="remove-item-btn">Remove</button></td>
         </tr>
         </tbody>
     </table>
-    <table>
-        <td class="name">
-            <input type="hidden" id="id-field" />
-            <input type="text" id="name-field" name="name" placeholder="Subject" />
-        </td>
-        <td class="age">
-            <input type="number" id="age-field" name="priority" placeholder="Priority" />
-        </td>
-        <td class="city">
-            <input type="text" id="city-field" name="colour" placeholder="Colour" />
-        </td>
-        <td class="add">
-            <!--<button id="add-btn">Add</button>-->
-            <input type="hidden" name="isAddSubject" value="true">
-            <input type="submit" id="add-btn" value="Add">
-            <button id="edit-btn">Edit</button>
-        </td>
-    </table>
+
+    <form action="SubjectsPage.jsp" method="post">
+        <table>
+            <td class="name">
+                <input type="hidden" id="id-field" />
+                <input type="text" id="name-field" name="name" placeholder="Subject" />
+            </td>
+            <td class="age">
+                <input type="text" id="age-field" name="priority" placeholder="Priority" />
+            </td>
+            <td class="city">
+                <input type="text" id="city-field" name="colour" placeholder="Colour" />
+            </td>
+            <td class="add">
+                <!--<button id="add-btn">Add</button>-->
+                <input type="hidden" name="isAddSubject" id="add-edit" value="true">
+                <input type="submit" id="add-btn" value="Add">
+                <input type="submit" id="edit-btn" value="Edit">
+            </td>
+        </table>
+    </form>
 
 </div>
 
@@ -231,7 +261,7 @@
     // Sets callbacks to the buttons in the list
     refreshCallbacks();
 
-    addBtn.click(function() {
+    /*addBtn.click(function() {
         contactList.add({
             id: Math.floor(Math.random()*110000),
             name: nameField.val(),
@@ -240,10 +270,10 @@
         });
         clearFields();
         refreshCallbacks();
-    });
+    });*/
 
     editBtn.click(function() {
-        var item = contactList.get('id', idField.val())[0];
+        /*var item = contactList.get('id', idField.val())[0];
         item.values({
             id:idField.val(),
             name: nameField.val(),
@@ -252,7 +282,8 @@
         });
         clearFields();
         editBtn.hide();
-        addBtn.show();
+        addBtn.show();*/
+        document.getElementById("add-edit").value = "edit";
     });
 
     function refreshCallbacks() {

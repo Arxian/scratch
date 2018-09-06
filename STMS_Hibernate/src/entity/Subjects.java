@@ -12,6 +12,9 @@ public class Subjects {
     private String name;
     private String colour;
 
+    public Subjects() {
+    }
+
     @Id
     @Column(name = "subjectID")
     public int getSubjectId() {
@@ -52,15 +55,39 @@ public class Subjects {
                 Objects.equals(colour, subjects.colour);
     }
 
-    public Subjects(String name, String colour, String usr){
+    public Subjects(String name, String colour, String usr, int prio){
         this.name = name;
         this.subjectId = name.hashCode();
-        this.userId = usr;
+        this.userID = usr;
         this.colour = colour;
+        this.priority = prio;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(subjectId, name, colour);
+    }
+
+    private String userID;
+
+    @Basic
+    @Column (name = "userID")
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    private int priority;
+
+    @Basic
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

@@ -10,6 +10,7 @@
 <%
     String usr = request.getParameter("lis_person_sourcedid");
     if(usr != null){
+        usr = usr.toLowerCase();
         if (!DBManager.isStored(usr)){
             DBManager.newUser(new Users(usr));
         }
@@ -20,6 +21,6 @@
         }
     }
     List<Notifications> notes = DBManager.getNotifications(usr);
-    int numNotes = 0;
-    if (notes != null) numNotes = notes.size();
+    int numNote = 0;
+    if (notes != null) numNote = notes.size();
 %>

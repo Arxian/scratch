@@ -15,6 +15,9 @@ public class Users {
         this.userId = userId;
     }
 
+    public Users() {
+    }
+
     @Id
     @Column(name = "userID")
     public String getUserId() {

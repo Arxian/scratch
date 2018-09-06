@@ -60,8 +60,9 @@ public class DBManager {
     public static boolean isStored(String userID){
         em.getTransaction().begin();
         boolean e = em.createQuery(String.format("from Users where userId = '%s'", userID), Users.class).getResultList().isEmpty();
+        System.out.println(e);
         em.getTransaction().commit();
-        return e;
+        return !e;
     }
 
     public static Types getType(String name){
@@ -88,10 +89,22 @@ public class DBManager {
         }
     }
 
+    public static List<Subjects> getSubjects(String usr){
+        em.getTransaction().begin();
+        try {
+            List<Subjects> s = em.createQuery(String.format("from Subjects where userID = '%s'",  usr), Subjects.class).getResultList();
+            em.getTransaction().commit();
+            return s;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            em.getTransaction().commit();
+            return null;
+        }
+    }
+
     public static List<Notifications> getNotifications(String usr){
         em.getTransaction().begin();
         try {
-            List<Notifications> n = em.createQuery(String.format("from Notifications where userID = '%s'", usr), Notifications.class).getResultList();
+            List<Notifications> n = em.createQuery(String.format("from Notifications where receiverID = '%s'", usr), Notifications.class).getResultList();
             em.getTransaction().commit();
             return n;
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -102,19 +115,32 @@ public class DBManager {
 
     public static String activityCountJson(String usr){
         em.getTransaction().begin();
-        Query q = em.createQuery(String.format("select typeId, count(*) from Events where userId = '%s' by typeId", usr));
+        Query q = em.createQuery(String.format("select typeId, count(*) from Events where userId = '%s' group by typeId", usr));
         String json = "";
         for (Object o : q.getResultList()){
             Object[] oL = (Object[]) o;
             String name = em.createQuery(String.format("from Types where typeId ='%s'", oL[0]), Types.class).getResultList().get(0).getTypeName();
             json += String.format("['%s', '%s'],", name, oL[1]);
         }
-        return json.substring(0, json.length()-1);
+        em.getTransaction().commit();
+        if (json.length() > 1) return json.substring(0, json.length()-1);
+        else return "['Nothing', '1']";
     }
 
     public static void newSubject(Subjects s){
         em.getTransaction().begin();
         em.persist(s);
+        em.getTransaction().commit();
+    }
+
+    public static void updateSubject(Subjects s){
+        Subjects rec = em.find(Subjects.class, s.getSubjectId());
+        em.getTransaction().begin();
+        rec.setColour(s.getColour());
+        rec.setName(s.getName());
+        rec.setPriority(s.getPriority());
+        rec.setUserID(s.getUserID());
+        rec.setSubjectId(s.getSubjectId());
         em.getTransaction().commit();
     }
 

@@ -23,7 +23,6 @@
 <head>
     <!-- User Data -->
     <%@include file="UserInfo.jsp"%>
-
     <title>Student Time Management System: My Teams</title>
     <!-- Logo -->
     <img src="img/Capture.PNG" alt="Logo" width="15%" height="15%">

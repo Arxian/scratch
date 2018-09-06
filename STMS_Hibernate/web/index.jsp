@@ -23,7 +23,7 @@
         <%@include file="UserInfo.jsp"%>
         <%
             Map<String, String[]> map = request.getParameterMap();
-            if (map.containsKey("isEventAdd") && map.get("isEventAdd").equals("true")){
+            if (map.containsKey("isEventAdd") && map.get("isEventAdd")[0].equals("true")){
                 DBManager.newEvent(new Events(
                         map.get("name")[0],
                         map.get("priority")[0],
@@ -97,7 +97,7 @@
         <script type="text/javascript">
             function myFunction() {
                 var x = document.getElementById("Demo");
-                if (x.className.indexOf("w3-show") == -1) {
+                if (x.className.indexOf("w3-show") === -1) {
                     x.className += " w3-show";
                 } else {
                     x.className = x.className.replace(" w3-show", "");
